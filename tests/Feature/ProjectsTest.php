@@ -55,4 +55,20 @@ class ProjectsTest extends TestCase
             ]
         ]);
     }
+    
+    public function test_show_a_project()
+    {
+        $project = Project::factory()->create();
+
+        $response = $this->getJson("/api/projects/{$project->id}");
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'title',
+                'description'
+            ]
+        ]);
+    }
 }
