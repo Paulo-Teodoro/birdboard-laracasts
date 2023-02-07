@@ -12,4 +12,9 @@ class ProjectsController extends Controller
     {
         return new ProjectResource(Project::create($request->all()));
     }
+
+    public function show(Project $project) 
+    {
+        return new ProjectResource($project);
+    }
 }
