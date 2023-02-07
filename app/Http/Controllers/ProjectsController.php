@@ -10,7 +10,9 @@ class ProjectsController extends Controller
 {
     public function store(StoreProjectRequest $request) 
     {
-        return new ProjectResource(Project::create($request->all()));
+        $project = auth()->user()->projects()->create($request->all());
+
+        return new ProjectResource($project);
     }
 
     public function show(Project $project) 
