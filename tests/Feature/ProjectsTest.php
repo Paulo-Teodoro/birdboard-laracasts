@@ -88,7 +88,9 @@ class ProjectsTest extends TestCase
 
     public function test_show_a_project()
     {
-        $project = Project::factory()->create();
+        $project = Project::factory()->create([
+            'user_id' => auth()->user()->id
+        ]);
 
         $response = $this->getJson("/api/projects/{$project->id}");
 
@@ -100,5 +102,31 @@ class ProjectsTest extends TestCase
                 'description'
             ]
         ]);
+    }
+
+    public function test_show_a_project_of_another_user()
+    {
+        $user = User::factory()->create();
+
+        $project = Project::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->getJson("/api/projects/{$project->id}");
+
+        $response->assertStatus(404);
+    }
+
+    public function test_list_all_projects_of_a_user()
+    {
+        Project::factory(5)->create();
+
+        Project::factory()->create([
+            'user_id' => auth()->user()->id
+        ]);
+
+        $response = $this->getJson("/api/projects");
+        $response->assertOk();
+        $response->assertJsonCount(1, 'data');
     }
 }
