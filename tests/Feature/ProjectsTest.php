@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ProjectsTest extends TestCase
@@ -17,6 +18,15 @@ class ProjectsTest extends TestCase
         parent::setUp();
 
         $this->actingAs(User::factory()->create());
+    }
+
+    public function test_create_a_project_unauthenticated()
+    {
+        Auth::logout();
+
+        $response = $this->postJson('/api/projects', []);
+
+        $response->assertUnauthorized();
     }
 
     public function test_create_a_project()
@@ -67,6 +77,15 @@ class ProjectsTest extends TestCase
         ]);
     }
     
+    public function test_show_a_project_unauthenticated()
+    {
+        Auth::logout();
+
+        $response = $this->getJson("/api/projects/1");
+
+        $response->assertUnauthorized();
+    }
+
     public function test_show_a_project()
     {
         $project = Project::factory()->create();
