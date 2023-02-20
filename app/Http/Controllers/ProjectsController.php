@@ -8,6 +8,11 @@ use App\Models\Project;
 
 class ProjectsController extends Controller
 {
+    public function index()
+    {
+        return ProjectResource::collection(Project::paginate());
+    }
+
     public function store(StoreProjectRequest $request) 
     {
         $project = auth()->user()->projects()->create($request->all());
@@ -15,8 +20,10 @@ class ProjectsController extends Controller
         return new ProjectResource($project);
     }
 
-    public function show(Project $project) 
+    public function show(int $id) 
     {
+        $project = Project::findOrFail($id);
+        
         return new ProjectResource($project);
     }
 }

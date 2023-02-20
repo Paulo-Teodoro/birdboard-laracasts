@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ProjectsController::class)->group(function () {
         Route::post('/projects', 'store');
         Route::get('/projects/{id}', 'show');
+        Route::get('/projects', 'index');
     });
 });
